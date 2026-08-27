@@ -16,8 +16,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navItems = [
     { label: 'Home', path: `/${defaultPath}/home`, icon: HomeIcon },
     { label: 'Leaderboard', path: `/${defaultPath}/leaderboard`, icon: Trophy },
-    { label: 'Groups Page', path: `/${defaultPath}groups`, icon: Users},
-    { label: 'Matches Page', path: `/${defaultPath}matches`, icon: Gamepad2},
+    { label: 'Groups Page', path: `/${defaultPath}/groups`, icon: Users},
+    { label: 'Matches Page', path: `/${defaultPath}/matches`, icon: Gamepad2},
     { label: 'Admin', path: `/${defaultPath}/admin`, icon: ShieldAlert},
   ];
 
