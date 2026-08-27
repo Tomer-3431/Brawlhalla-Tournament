@@ -12,13 +12,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const defaultPath = "Brawlhalla-Tournament";
   const navItems = [
-    { label: 'Home', path: `/${defaultPath}/home`, icon: HomeIcon },
-    { label: 'Leaderboard', path: `/${defaultPath}/leaderboard`, icon: Trophy },
-    { label: 'Groups Page', path: `/${defaultPath}/groups`, icon: Users},
-    { label: 'Matches Page', path: `/${defaultPath}/matches`, icon: Gamepad2},
-    { label: 'Admin', path: `/${defaultPath}/admin`, icon: ShieldAlert},
+    { label: 'Home', path: `/home`, icon: HomeIcon },
+    { label: 'Leaderboard', path: `/leaderboard`, icon: Trophy },
+    { label: 'Groups Page', path: `/groups`, icon: Users},
+    { label: 'Matches Page', path: `/matches`, icon: Gamepad2},
+    { label: 'Admin', path: `/admin`, icon: ShieldAlert},
   ];
 
   const handleNavigation = (path: string) => {

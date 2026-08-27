@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import './css/App.css'
 import Home from './pages/Home';
 import { MainLayout } from './components/MainLayout';
@@ -12,18 +12,18 @@ export const isAdmin: boolean = true;
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route path="/Brawlhalla-Tournament" element={<Home />}/>
-          <Route path="/Brawlhalla-Tournament/home" element={<Home />}/>
-          <Route path="/Brawlhalla-Tournament/leaderboard" element={<Leaderboard />}/>
-          <Route path="/Brawlhalla-Tournament/groups" element={<GroupsPage />}/>
-          <Route path="/Brawlhalla-Tournament/matches" element={<MatchesPages />}/>
-          {isAdmin && (<Route path="/Brawlhalla-Tournament/admin" element={<Admin />}/>)}
+          <Route path="/" element={<Home />}/>
+          <Route path="/home" element={<Home />}/>
+          <Route path="/leaderboard" element={<Leaderboard />}/>
+          <Route path="/groups" element={<GroupsPage />}/>
+          <Route path="/matches" element={<MatchesPages />}/>
+          {isAdmin && (<Route path="/admin" element={<Admin />}/>)}
           <Route path="*" element={<Home />}/>
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
