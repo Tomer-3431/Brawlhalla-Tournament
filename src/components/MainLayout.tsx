@@ -6,6 +6,7 @@ import { db } from '../Firebase';
 import { onValue, ref } from 'firebase/database';
 import { Megaphone, Sparkles } from 'lucide-react';
 import { MoneyWaterRain } from '../fun/MoneyWaterRain';
+import TamirPicture from '../assets/Tamir.jpg';
 
 export const MainLayout: React.FC = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
@@ -87,7 +88,7 @@ export const MainLayout: React.FC = () => {
 
             {/* Increased Image Size */}
             <img
-              src="src/assets/Tamir.jpg"
+              src={TamirPicture}
               alt="Sponsor Logo"
               className="h-44 sm:h-64 max-w-[80vw] w-auto object-contain filter drop-shadow-[0_10px_15px_rgba(0,0,0,0.8)]"
             />

@@ -7,7 +7,7 @@ import { Admin } from './pages/Admin';
 import { GroupsPage } from './pages/GroupsPage';
 import { MatchesPages } from './pages/MatchesPage';
 
-export const isAdmin: boolean = false;
+export const isAdmin: boolean = true;
 
 export default function App() {
   return (
