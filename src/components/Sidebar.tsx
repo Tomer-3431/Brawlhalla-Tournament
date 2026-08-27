@@ -18,7 +18,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { label: 'Leaderboard', path: `/${defaultPath}/leaderboard`, icon: Trophy },
     { label: 'Groups Page', path: `/${defaultPath}groups`, icon: Users},
     { label: 'Matches Page', path: `/${defaultPath}matches`, icon: Gamepad2},
-    { label: 'Admin', path: `/${defaultPath}admin`, icon: ShieldAlert},
+    { label: 'Admin', path: `/${defaultPath}/admin`, icon: ShieldAlert},
   ];
 
   const handleNavigation = (path: string) => {
