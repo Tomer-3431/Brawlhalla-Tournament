@@ -114,6 +114,15 @@ export const UserEditor: React.FC = () => {
                                 className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white"
                             />
                         </div>
+                        <div>
+                            <label className="text-xs text-zinc-400 block mb-1">Eliminated</label>
+                            <input
+                                type="checkbox"
+                                checked={selectedUser.isEliminated}
+                                onChange={(e) => setSelectedUser({ ...selectedUser, isEliminated: e.target.checked })}
+                                className="bg-zinc-950 border border-zinc-800 rounded px-3 text-white mt-4"
+                            />
+                        </div>
                     </div>
 
                     {/* Avatar Field & Live Preview */}
