@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Home as HomeIcon, Trophy, Gamepad2, ShieldAlert, Info, Sparkles, Users } from 'lucide-react';
+import { X, Home as HomeIcon, Trophy, Gamepad2, ShieldAlert, Users } from 'lucide-react';
 import { isAdmin } from '../App';
 
 interface SidebarProps {
