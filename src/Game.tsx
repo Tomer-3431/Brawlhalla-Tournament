@@ -146,6 +146,11 @@ export const GameProfile: React.FC<{ game: Game }> = ({ game }) => {
                                         <span className="font-semibold text-lg text-white">
                                             {user.username}
                                         </span>
+                                        {user?.title && (
+                                            <span className="user-title text-xs text-zinc-400 ml-4 shrink-0">
+                                                {user.title}
+                                            </span>
+                                        )}
                                         {isWinner && (
                                             <span className="text-xs font-bold px-2 py-0.5 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full">
                                                 WINNER
