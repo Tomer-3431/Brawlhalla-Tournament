@@ -12,10 +12,8 @@ export const Admin: React.FC = () => {
         "fun-shit" | "edit-users" | "edit-games" | "edit-groups" | "scorekeeper" | "edit-matches"
     >("fun-shit");
 
-    const isBracketTab = tab === "edit-matches";
-
     return (
-        <div className={`w-full mx-auto p-4 font-sans text-zinc-100 ${isBracketTab ? "max-w-none" : "max-w-5xl"}`}>
+        <div className={`w-full mx-auto p-4 font-sans text-zinc-100 max-w-5xl`}>
             {/* Header Tabs */}
             <div className="flex flex-wrap gap-2 mb-6 p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg">
                 <button
@@ -63,7 +61,7 @@ export const Admin: React.FC = () => {
             </div>
 
             {/* View Switching */}
-            <div className={`bg-zinc-900 border border-zinc-800 rounded-lg p-6 ${isBracketTab ? "overflow-x-auto min-w-full" : ""}`}>
+            <div className={`bg-zinc-900 border border-zinc-800 rounded-lg p-6`}>
                 {tab === "fun-shit" && <FunShit />}
                 {tab === "edit-users" && <UserEditor />}
                 {tab === "edit-games" && <GameFullEditor />}

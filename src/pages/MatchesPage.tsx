@@ -93,13 +93,18 @@ export const MatchesPages: React.FC = () => {
 
             const fromGame = games.find((g) => g.id === conn.fromGameId);
             const toGame = games.find((g) => g.id === conn.toGameId);
-            
+
             // Extract user IDs from both games (supports arrays of objects or strings)
             const fromUserIds = (fromGame?.users || []).map((u: any) => typeof u === "string" ? u : u.id);
             const toUserIds = (toGame?.users || []).map((u: any) => typeof u === "string" ? u : u.id);
 
-            const isHighlighted = hoveredUserId
-                ? fromUserIds.includes(hoveredUserId) && toUserIds.includes(hoveredUserId)
+            const isHighlighted = hoveredUserId != null
+                ? fromGame != undefined && toGame != undefined && fromUserIds.includes(hoveredUserId) && toUserIds.includes(hoveredUserId)
+                && fromGame.winner != undefined && (
+                    conn.type === 'winner' && fromGame.users[fromGame.winner] === hoveredUserId
+                    || conn.type === 'loser' && fromGame.users[fromGame.winner] !== hoveredUserId
+                    || conn.type === 'final'
+                )
                 : false;
 
             return {
@@ -173,8 +178,8 @@ export const MatchesPages: React.FC = () => {
                     </svg>
 
                     <div className="flex gap-10 items-stretch">
-                        {rounds.map((r) => {
-                            const isFinalRound = r === 5;
+                        {rounds.map((r, i) => {
+                            const isFinalRound = i === rounds.length - 1;
                             const roundGames = games.filter((g) => g.round === r);
                             const upperGames = roundGames.filter((g) => g.bracket === 'upper');
                             const lowerGames = roundGames.filter((g) => g.bracket === 'lower');
@@ -270,7 +275,7 @@ interface GameCardProps {
 
 const GameCard: React.FC<GameCardProps> = ({ game, users, hoveredUserId, onHoverUser, innerRef }) => {
     const participantList = game.users || [];
-    
+
     // Resolve user IDs and User objects whether elements in game.users are strings or objects
     const resolvedParticipants = participantList.map((userItem: any) => {
         if (typeof userItem === "object" && userItem !== null) {
