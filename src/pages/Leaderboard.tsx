@@ -66,17 +66,18 @@ export function Leaderboard() {
         let win = 0;
         let lose = 0;
         games.forEach((game) => {
-            if (game.points != null && game.users.includes(user.id)) {
+            if (game.points && game.users.includes(user.id)) {
                 score += game.points[game.users.indexOf(user.id)];
             }
-            if (game.users && game.users.includes(user.id) && game.winner) {
-                if (game.users[game.winner] == user.id) {
+            if (game.users && game.users.includes(user.id) && game.winner != undefined) {
+                if (game.users[game.winner] === user.id) {
                     win++;
                 } else {
                     lose++;
                 }
             }
         })
+
 
         usersList = [...usersList, { User: user, score: score, win: win, lose: lose }];
     });
@@ -114,7 +115,7 @@ export function Leaderboard() {
                     const rank = i + 1;
                     const isTopThree = rank <= 3;
                     return (
-                        <div className="m-2">
+                        <div className="m-2" key={i}>
                             <UserProfile user={user.User} score={user.score} winRatio={{ win: user.win, lose: user.lose }} leading={<div className="flex items-center justify-center w-8 shrink-0">
                                 {isTopThree ? (
                                     <div

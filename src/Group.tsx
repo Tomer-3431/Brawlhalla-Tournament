@@ -76,7 +76,7 @@ export const GroupProfile: React.FC<{ group: Group }> = ({ group }) => {
             if (game.points != null && game.users.includes(user.id)) {
                 score += game.points[game.users.indexOf(user.id)];
             }
-            if (game.users.includes(user.id) && game.winner) {
+            if (game.users.includes(user.id) && game.winner !== undefined) {
                 if (game.users[game.winner] == user.id) {
                     win++;
                 } else {
