@@ -30,7 +30,7 @@ export const MoneyWaterRain: React.FC = () => {
             opacity: number;
         }> = [];
 
-        const emojis = ["💵", "💸", "💰", "💧", "💦"];
+        const emojis = ["💵", "💸", "💰", "💧", "💦", "🚰", "⛲"];
 
         for (let i = 0; i < 90; i++) {
             const isMoney = Math.random() > 0.4;
