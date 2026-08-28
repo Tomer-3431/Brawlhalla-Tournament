@@ -7,8 +7,7 @@ import { Admin } from './pages/Admin';
 import { GroupsPage } from './pages/GroupsPage';
 import { MatchesPages } from './pages/MatchesPage';
 
-export const isAdmin: boolean = true;
-
+export const isAdmin = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 
 export default function App() {
   return (
