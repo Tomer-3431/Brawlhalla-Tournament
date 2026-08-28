@@ -6,7 +6,7 @@ interface AppBarProps {
   title?: string;
 }
 
-export const AppBar: React.FC<AppBarProps> = ({ onOpenDrawer, title = "BRAWLHALLA TOURNAMENT" }) => {
+export const AppBar: React.FC<AppBarProps> = ({ onOpenDrawer, title = "TOURNAMENT" }) => {
   return (
     <header className="h-12 bg-gray-900 border-b border-gray-800 px-4 flex items-center justify-between sticky top-0 z-30 shadow-md">
       {/* Left: Drawer Toggle */}
