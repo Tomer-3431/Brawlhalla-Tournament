@@ -19,9 +19,9 @@ export const GameLiveEditor: React.FC = () => {
                 const data = snapshot.val();
                 const list: Game[] = Object.keys(data).map((id) => ({ id, ...data[id] }));
                 setGames(list);
-                if (!selectedGameId && list.length > 0) {
-                    setSelectedGameId(list[0].id);
-                }
+                // if (!selectedGameId && list.length > 0) {
+                //     setSelectedGameId("");
+                // }
             } else {
                 setGames([]);
             }
