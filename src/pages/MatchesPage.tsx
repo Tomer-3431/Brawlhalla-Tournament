@@ -122,7 +122,7 @@ export const MatchesPages: React.FC = () => {
         updateLines();
     }, [games, connections, hoveredUserId]);
 
-    const rounds = [0, 1, 2, 3, 4, 5];
+    const rounds = [1, 2, 3, 4, 5, 6];
 
     return (
         <div className="w-full h-full text-white p-6 select-none font-sans" onScroll={updateLines}>
