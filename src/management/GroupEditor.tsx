@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { ref, onValue } from "firebase/database";
 import { Plus, TagPlus, Trash2, UserPlus, X } from "lucide-react";
-import type Group from "../Group";
+import type Group from "../types/Group";
 import { db } from "../Firebase";
 import { deleteGroup, updateGroup } from "./utils";
-import type User from "../User";
-import type Game from "../Game";
+import type User from "../types/User";
+import type Game from "../types/Game";
 
 export const GroupEditor: React.FC = () => {
     const [groups, setGroups] = useState<Group[]>([]);

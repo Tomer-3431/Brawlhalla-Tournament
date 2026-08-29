@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ref, onValue } from "firebase/database";
 import { Plus, Trash2, Image as ImageIcon } from "lucide-react";
-import type User from "../User";
+import type User from "../types/User";
 import { db } from "../Firebase";
 import { deleteUser, updateUser } from "./utils";
 

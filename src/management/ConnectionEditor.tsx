@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ref, onValue, set, remove } from "firebase/database";
 import { Plus, Trash2, GitCommit, ArrowRight, RefreshCw } from "lucide-react";
-import type Connection from "../Connection";
-import type Game from "../Game";
+import type Connection from "../types/Connection";
+import type Game from "../types/Game";
 import { db } from "../Firebase";
 import { createConnection, updateConnection, deleteConnection } from "./utils";
 

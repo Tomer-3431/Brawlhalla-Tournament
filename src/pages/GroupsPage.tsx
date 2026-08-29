@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import type Group from '../Group';
+import type Group from '../types/Group';
 import { db } from '../Firebase';
 import { onValue, ref } from 'firebase/database';
-import { GroupProfile } from '../Group';
+import { GroupProfile } from '../types/Group';
 
 export function GroupsPage() {
   const [groups, setGroups] = useState<Group[]>([]);

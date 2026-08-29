@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { child, get, ref } from "firebase/database";
-import { db } from "./Firebase";
+import { db } from "../Firebase";
 import { ArrowRight, Gamepad2, Radio, Skull, Trophy } from "lucide-react";
 import type User from "./User";
 

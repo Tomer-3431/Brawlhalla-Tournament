@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import type User from "../User";
+import type User from "../types/User";
 import { off, onValue, ref } from "firebase/database";
 import { db } from "../Firebase";
-import { UserProfile } from "../User";
+import { UserProfile } from "../types/User";
 import { Trophy } from "lucide-react";
-import type Game from "../Game";
+import type Game from "../types/Game";
 
 export function Leaderboard() {
     const [users, setUsers] = useState<User[]>([]);

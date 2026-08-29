@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { ref, onValue } from "firebase/database";
 import { Radio, Trophy } from "lucide-react";
-import type Game from "../Game";
-import type User from "../User";
+import type Game from "../types/Game";
 import { db } from "../Firebase";
+import type User from "../types/User";
 
 export default function Home() {
     const [liveGames, setLiveGames] = useState<Game[]>([]);

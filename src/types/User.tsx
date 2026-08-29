@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { db } from "./Firebase";
+import { db } from "../Firebase";
 import { get, ref } from "firebase/database";
 
 export default interface User {

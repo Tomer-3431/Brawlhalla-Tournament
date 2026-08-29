@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import type Game from "../Game";
-import type User from "../User";
+import type Game from "../types/Game";
+import type User from "../types/User";
 import { onValue, ref } from "firebase/database";
 import { db } from "../Firebase";
 import React from "react";
 import { Trophy } from "lucide-react";
-import { GameProfile } from "../Game";
+import { GameProfile } from "../types/Game";
 import { createPortal } from "react-dom";
-import type Connection from "../Connection";
+import type Connection from "../types/Connection";
 
 export const MatchesPages: React.FC = () => {
     const [games, setGames] = useState<Game[]>([]);

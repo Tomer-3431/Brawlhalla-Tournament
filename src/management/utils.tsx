@@ -1,9 +1,9 @@
 import { ref, update, set, remove, push } from "firebase/database";
-import type User from "../User";
+import type User from "../types/User";
 import { db } from "../Firebase";
-import type Game from "../Game";
-import type Group from "../Group";
-import type Connection from "../Connection";
+import type Game from "../types/Game";
+import type Group from "../types/Group";
+import type Connection from "../types/Connection";
 
 // User Helpers
 export async function createUser(data: Omit<User, "id">) {

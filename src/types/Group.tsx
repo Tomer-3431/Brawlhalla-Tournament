@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { child, get, ref } from "firebase/database";
-import { db } from "./Firebase";
 import { ChevronDown, ChevronUp, Gamepad2, Trophy, Users } from "lucide-react";
-import type User from "./User";
 import type Game from "./Game";
-import { UserProfile } from "./User";
 import { GameProfile } from "./Game";
+import type User from "./User";
+import { UserProfile } from "./User";
+import { db } from "../Firebase";
 
 export default interface Group {
     id: string;

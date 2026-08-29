@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ref, onValue } from "firebase/database";
 import { Plus, Trash2, UserPlus, X } from "lucide-react";
-import type Game from "../Game";
-import type User from "../User";
+import type Game from "../types/Game";
+import type User from "../types/User";
 import { db } from "../Firebase";
 import { deleteGame, updateGameFull } from "./utils";
 
