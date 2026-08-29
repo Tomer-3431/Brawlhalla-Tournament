@@ -6,23 +6,23 @@ import { Leaderboard } from './pages/Leaderboard';
 import { Admin } from './pages/Admin';
 import { GroupsPage } from './pages/GroupsPage';
 import { MatchesPages } from './pages/MatchesPage';
-
-export const isAdmin = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+import { GiveCookie } from './pages/GiveCookie';
 
 export default function App() {
-  return (
-    <HashRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />}/>
-          <Route path="/home" element={<Home />}/>
-          <Route path="/leaderboard" element={<Leaderboard />}/>
-          <Route path="/groups" element={<GroupsPage />}/>
-          <Route path="/matches" element={<MatchesPages />}/>
-          {isAdmin && (<Route path="/admin" element={<Admin />}/>)}
-          <Route path="*" element={<Home />}/>
-        </Route>
-      </Routes>
-    </HashRouter>
-  );
+    return (
+        <HashRouter>
+            <Routes>
+                <Route element={<MainLayout />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/leaderboard" element={<Leaderboard />} />
+                    <Route path="/groups" element={<GroupsPage />} />
+                    <Route path="/matches" element={<MatchesPages />} />
+                    <Route path="/admin" element={<Admin />} />
+                    <Route path={`/${import.meta.env.VITE_ADMIN_KEY}`} element={<GiveCookie />} />
+                    <Route path="*" element={<Home />} />
+                </Route>
+            </Routes>
+        </HashRouter>
+    );
 }

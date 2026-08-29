@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Zap, Settings, Trophy, Users, PartyPopper, Gamepad2Icon } from 'lucide-react';
 import { GameLiveEditor } from '../management/GameLiveEditor';
 import { GameFullEditor } from '../management/GameFullEditor';
@@ -6,11 +6,33 @@ import { UserEditor } from '../management/UserEditor';
 import { GroupEditor } from '../management/GroupEditor';
 import { ConnectionEditor } from '../management/ConnectionEditor';
 import { FunShit } from '../fun/Funshit';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 export const Admin: React.FC = () => {
     const [tab, setTab] = useState<
         "fun-shit" | "edit-users" | "edit-games" | "edit-groups" | "scorekeeper" | "edit-matches"
     >("fun-shit");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        var isAdmin = false;
+        if (window.location.hostname === "localhost"
+            || window.location.hostname === "127.0.0.1"
+        ) {
+            isAdmin = true;
+        }
+
+        const getCookie = Cookies.get(import.meta.env.VITE_ADMIN_KEY);
+
+        if (getCookie === 'true') {
+            isAdmin = true;
+        }
+
+        if (!isAdmin) {
+            navigate("/home");
+        }
+    })
 
     return (
         <div className={`w-full mx-auto p-4 font-sans text-zinc-100 max-w-5xl`}>
