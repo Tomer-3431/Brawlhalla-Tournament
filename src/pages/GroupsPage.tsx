@@ -8,6 +8,9 @@ export function GroupsPage() {
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [troll, setTroll] = useState<string>('');
+  const [isTroll, setIsTroll] = useState<boolean>(false);
+
   useEffect(() => {
     const groupsRef = ref(db, '/groups');
 
@@ -35,7 +38,29 @@ export function GroupsPage() {
       }
     );
 
-    return () => unsubscribe();
+    const trollRef = ref(db, "funshit/everyoneIsTamir");
+    const unsubTroll = onValue(trollRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setTroll(snapshot.val());
+      } else {
+        setTroll('');
+      }
+    });
+
+    const isTrollRef = ref(db, "funshit/isEveryoneIsTamir");
+    const unsubIsTroll = onValue(isTrollRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setIsTroll(snapshot.val());
+      } else {
+        setIsTroll(false);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      unsubIsTroll();
+      unsubTroll();
+    }
   }, []);
 
   if (loading) return <div className="text-white p-4">Loading games...</div>;
@@ -43,7 +68,7 @@ export function GroupsPage() {
   return (
     <div className="space-y-4">
       {groups.map((group) => (
-        <GroupProfile key={group.id} group={group} />
+        <GroupProfile key={group.id} group={group} isTroll={isTroll} troll={troll} />
       ))}
     </div>
   );

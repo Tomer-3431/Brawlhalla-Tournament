@@ -11,6 +11,9 @@ export function Leaderboard() {
     const [games, setGames] = useState<Game[]>([]);
     var usersList: { User: User, score: number, win: number, lose: number }[] = [];
 
+    const [troll, setTroll] = useState<string>('');
+    const [isTroll, setIsTroll] = useState<boolean>(false);
+
     useEffect(() => {
         const usersRef = ref(db, '/users');
         const gamesRef = ref(db, '/games');
@@ -53,11 +56,31 @@ export function Leaderboard() {
             }, (err) => {
                 console.error('Firebase read error: ', err);
             }
-        )
+        );
+
+        const trollRef = ref(db, "funshit/everyoneIsTamir");
+        const unsubTroll = onValue(trollRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setTroll(snapshot.val());
+            } else {
+                setTroll('');
+            }
+        });
+
+        const isTrollRef = ref(db, "funshit/isEveryoneIsTamir");
+        const unsubIsTroll = onValue(isTrollRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setIsTroll(snapshot.val());
+            } else {
+                setIsTroll(false);
+            }
+        });
 
         return () => {
             off(usersRef);
             off(gamesRef);
+            unsubTroll();
+            unsubIsTroll();
         }
     }, []);
 
@@ -65,21 +88,37 @@ export function Leaderboard() {
         let score = 0;
         let win = 0;
         let lose = 0;
-        games.forEach((game) => {
-            if (game.points && game.users.includes(user.id)) {
-                score += game.points[game.users.indexOf(user.id)];
-            }
-            if (game.users && game.users.includes(user.id) && game.winner != undefined) {
-                if (game.users[game.winner] === user.id) {
-                    win++;
-                } else {
-                    lose++;
+        if (!isTroll) {
+            games.forEach((game) => {
+                if (game.points && game.users.includes(user.id)) {
+                    score += game.points[game.users.indexOf(user.id)];
                 }
-            }
-        })
+                if (game.users && game.users.includes(user.id) && game.winner != undefined) {
+                    if (game.users[game.winner] === user.id) {
+                        win++;
+                    } else {
+                        lose++;
+                    }
+                }
+            });
 
+            usersList = [...usersList, { User: user, score: score, win: win, lose: lose }];
+        } else {
+            games.forEach((game) => {
+                if (game.points && game.users.includes(troll)) {
+                    score += game.points[game.users.indexOf(troll)];
+                }
+                if (game.users && game.users.includes(troll) && game.winner != undefined) {
+                    if (game.users[game.winner] === troll) {
+                        win++;
+                    } else {
+                        lose++;
+                    }
+                }
+            });
 
-        usersList = [...usersList, { User: user, score: score, win: win, lose: lose }];
+            usersList = [...usersList, { User: users.filter((u) => u.id == troll)[0], score: score, win: win, lose: lose }];
+        }
     });
 
     usersList.sort((a, b) => {

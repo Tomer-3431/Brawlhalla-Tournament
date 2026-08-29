@@ -19,6 +19,10 @@ export const MatchesPages: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const gameRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
+    const [isTroll, setIsTroll] = useState<boolean>(false);
+    const [troll, setTroll] = useState<string>('');
+    const [trollUser, setTrollUser] = useState<User | undefined>();
+
     useEffect(() => {
         // 1. Fetch Users
         const unsubUsers = onValue(ref(db, "users"), (snapshot) => {
@@ -49,12 +53,45 @@ export const MatchesPages: React.FC = () => {
             }
         });
 
+        const isTrollRef = ref(db, "funshit/isEveryoneIsTamir");
+        const unsubIsTroll = onValue(isTrollRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setIsTroll(snapshot.val());
+            } else {
+                setIsTroll(false);
+            }
+        });
+
+        const trollRef = ref(db, "funshit/everyoneIsTamir");
+        const unsubTroll = onValue(trollRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setTroll(snapshot.val());
+            } else {
+                setTroll('');
+            }
+        });
+
         return () => {
             unsubGames();
             unsubUsers();
             unsubConnections();
+            unsubIsTroll();
+            unsubTroll();
         };
     }, []);
+
+    useEffect(() => {
+        const unsubTrollUser = onValue(ref(db, `users/${troll}`), (snapshot) => {
+            if (snapshot.exists()) {
+                setTrollUser({ id: troll, ...snapshot.val() });
+            } else {
+                setTrollUser(undefined);
+            }
+        });
+        return () => {
+            unsubTrollUser();
+        };
+    }, [isTroll, troll]);
 
     const updateLines = () => {
         if (!containerRef.current) return;
@@ -212,6 +249,10 @@ export const MatchesPages: React.FC = () => {
                                                             hoveredUserId={hoveredUserId}
                                                             onHoverUser={setHoveredUserId}
                                                             innerRef={(el) => (gameRefs.current[game.id] = el)}
+                                                            isTroll={isTroll}
+                                                            troll={troll}
+                                                            trollName={trollUser?.username ?? ""}
+                                                            trollImage={trollUser?.avatar ?? ""}
                                                         />
                                                     ))}
                                                 </div>
@@ -230,6 +271,10 @@ export const MatchesPages: React.FC = () => {
                                                             hoveredUserId={hoveredUserId}
                                                             onHoverUser={setHoveredUserId}
                                                             innerRef={(el) => (gameRefs.current[game.id] = el)}
+                                                            isTroll={isTroll}
+                                                            troll={troll}
+                                                            trollName={trollUser?.username ?? ""}
+                                                            trollImage={trollUser?.avatar ?? ""}
                                                         />
                                                     ))}
                                                 </div>
@@ -249,6 +294,10 @@ export const MatchesPages: React.FC = () => {
                                                             hoveredUserId={hoveredUserId}
                                                             onHoverUser={setHoveredUserId}
                                                             innerRef={(el) => (gameRefs.current[game.id] = el)}
+                                                            isTroll={isTroll}
+                                                            troll={troll}
+                                                            trollName={trollUser?.username ?? ""}
+                                                            trollImage={trollUser?.avatar ?? ""}
                                                         />
                                                     ))}
                                                 </div>
@@ -271,9 +320,13 @@ interface GameCardProps {
     hoveredUserId: string | null;
     onHoverUser: (userId: string | null) => void;
     innerRef: (el: HTMLDivElement | null) => void;
+    isTroll: boolean;
+    troll: string;
+    trollName: string;
+    trollImage: string;
 }
 
-const GameCard: React.FC<GameCardProps> = ({ game, users, hoveredUserId, onHoverUser, innerRef }) => {
+const GameCard: React.FC<GameCardProps> = ({ game, users, hoveredUserId, onHoverUser, innerRef, isTroll, troll, trollName, trollImage }) => {
     const participantList = game.users || [];
 
     // Resolve user IDs and User objects whether elements in game.users are strings or objects
@@ -333,13 +386,23 @@ const GameCard: React.FC<GameCardProps> = ({ game, users, hoveredUserId, onHover
                                         }`}
                                 >
                                     <div className="flex items-center gap-2 overflow-hidden">
-                                        {userObj?.avatar ? (
-                                            <img src={userObj.avatar} alt="" className="w-4 h-4 rounded-full shrink-0" />
-                                        ) : (
-                                            <div className="w-4 h-4 rounded-full bg-zinc-800 shrink-0" />
-                                        )}
+                                        {!isTroll
+                                            ? userObj?.avatar ?
+                                                (<img src={userObj.avatar} alt="" className="w-4 h-4 rounded-full shrink-0" />)
+                                                : (
+                                                    <div className="w-4 h-4 rounded-full bg-zinc-800 shrink-0" />
+                                                )
+                                            : trollImage !== "" ?
+                                                (<img src={trollImage} alt="" className="w-4 h-4 rounded-full shrink-0" />)
+                                                : (
+                                                    <div className="w-4 h-4 rounded-full bg-zinc-800 shrink-0" />
+                                                )
+                                        }
                                         <span className="text-xs truncate">
-                                            {userObj?.username || userObj?.name || userId || "TBD"}
+                                            {!isTroll
+                                                ? userObj?.username || userObj?.name || userId || "TBD"
+                                                : (trollName)
+                                            }
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-1 shrink-0">
@@ -363,7 +426,7 @@ const GameCard: React.FC<GameCardProps> = ({ game, users, hoveredUserId, onHover
                         className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl max-w-md w-full shadow-2xl relative lg:max-w-4xl"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <GameProfile game={game} />
+                        <GameProfile game={game} isTroll={isTroll} troll={troll} />
                     </div>
                 </div>,
                 document.body

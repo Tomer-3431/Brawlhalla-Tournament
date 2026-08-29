@@ -7,7 +7,7 @@ export default interface User {
     username: string;
     title: string;
     avatar: string;
-    isEliminated: boolean,
+    isEliminated: boolean;
 }
 
 export const UserIdProfile: React.FC<{ userId: string }> = ({ userId }) => {

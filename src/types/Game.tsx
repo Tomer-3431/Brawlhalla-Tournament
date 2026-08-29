@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { child, get, ref } from "firebase/database";
+import { child, get, onValue, ref } from "firebase/database";
 import { db } from "../Firebase";
 import { ArrowRight, Gamepad2, Radio, Skull, Trophy } from "lucide-react";
 import type User from "./User";
@@ -18,8 +18,9 @@ export default interface Game {
     isLive?: boolean;
 }
 
-export const GameProfile: React.FC<{ game: Game }> = ({ game }) => {
+export const GameProfile: React.FC<{ game: Game, isTroll?: boolean, troll?: string }> = ({ game, isTroll, troll }) => {
     const [users, setUsers] = useState<User[]>([]);
+    const [trollUser, setTrollUser] = useState<User | undefined>();
 
     useEffect(() => {
         let isMounted = true;
@@ -50,6 +51,20 @@ export const GameProfile: React.FC<{ game: Game }> = ({ game }) => {
             isMounted = false;
         };
     }, [game.id, game.users]);
+
+    useEffect(() => {
+        const unsubTrollUser = onValue(ref(db, `users/${troll}`), (snapshot) => {
+            if (snapshot.exists()) {
+                setTrollUser({ id: troll, ...snapshot.val() });
+            } else {
+                setTrollUser(undefined);
+            }
+        });
+
+        return () => {
+            unsubTrollUser();
+        }
+    }, [troll]);
 
     return (
         <div className="w-full max-w-4xl mx-auto space-y-6 font-sans">
@@ -136,7 +151,7 @@ export const GameProfile: React.FC<{ game: Game }> = ({ game }) => {
                                 <div className="flex items-center gap-4">
                                     <div className={`relative p-0.5 rounded-full border-2 ${isWinner ? 'border-yellow-400' : 'border-indigo-500'} overflow-hidden shrink-0`}>
                                         <img
-                                            src={user.avatar}
+                                            src={!isTroll ? user.avatar : trollUser?.avatar}
                                             alt={`${user.username}'s avatar`}
                                             className="w-12 h-12 rounded-full object-cover"
                                         />
@@ -144,13 +159,20 @@ export const GameProfile: React.FC<{ game: Game }> = ({ game }) => {
 
                                     <div className="flex items-center gap-2">
                                         <span className="font-semibold text-lg text-white">
-                                            {user.username}
+                                            {!isTroll ? user.username : trollUser?.username}
                                         </span>
-                                        {user?.title && (
-                                            <span className="user-title text-xs text-zinc-400 ml-4 shrink-0">
-                                                {user.title}
-                                            </span>
-                                        )}
+                                        {!isTroll
+                                            ? user?.title && (
+                                                <span className="user-title text-xs text-zinc-400 ml-4 shrink-0">
+                                                    {user.title}
+                                                </span>
+                                            )
+                                            : trollUser?.title && (
+                                                <span className="user-title text-xs text-zinc-400 ml-4 shrink-0">
+                                                    {trollUser.title}
+                                                </span>
+
+                                            )}
                                         {isWinner && (
                                             <span className="text-xs font-bold px-2 py-0.5 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full">
                                                 WINNER

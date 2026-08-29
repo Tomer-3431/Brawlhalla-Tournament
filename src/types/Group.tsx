@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { child, get, ref } from "firebase/database";
+import { child, get, onValue, ref } from "firebase/database";
 import { ChevronDown, ChevronUp, Gamepad2, Trophy, Users } from "lucide-react";
 import type Game from "./Game";
 import { GameProfile } from "./Game";
@@ -21,12 +21,14 @@ const TROPHY_COLORS: Record<number, string> = {
     3: "text-amber-700 border-amber-700/30 bg-amber-700/10",
 };
 
-export const GroupProfile: React.FC<{ group: Group }> = ({ group }) => {
+export const GroupProfile: React.FC<{ group: Group, isTroll?: boolean, troll?: string }> = ({ group, isTroll, troll }) => {
     const [activeTab, setActiveTab] = useState<"members" | "games">("members");
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
     const [users, setUsers] = useState<User[]>([]);
     const [games, setGames] = useState<Game[]>([]);
     var userList: { User: User, score: number, win: number, lose: number }[] = [];
+
+    const [trollUser, setTrollUser] = useState<User | undefined>();
 
     useEffect(() => {
         let isMounted = true;
@@ -68,10 +70,25 @@ export const GroupProfile: React.FC<{ group: Group }> = ({ group }) => {
         };
     }, [group.id, group.users, group.games]);
 
+    useEffect(() => {
+        const unsubTrollUser = onValue(ref(db, `users/${troll}`), (snapshot) => {
+            if (snapshot.exists()) {
+                setTrollUser({ id: troll, ...snapshot.val() });
+            } else {
+                setTrollUser(undefined);
+            }
+        });
+
+        return () => {
+            unsubTrollUser();
+        }
+    }, [troll]);
+
     users.forEach((user) => {
         let score = 0;
         let win = 0;
         let lose = 0;
+
         games.forEach((game) => {
             if (game.points != null && game.users.includes(user.id)) {
                 score += game.points[game.users.indexOf(user.id)];
@@ -85,7 +102,11 @@ export const GroupProfile: React.FC<{ group: Group }> = ({ group }) => {
             }
         })
 
-        userList = [...userList, { User: user, score: score, win: win, lose: lose }];
+        if (!isTroll) {
+            userList = [...userList, { User: user, score: score, win: win, lose: lose }];
+        } else {
+            userList = [...userList, { User: trollUser!, score: score, win: win, lose: lose }];
+        }
     });
 
     return (
@@ -167,7 +188,7 @@ export const GroupProfile: React.FC<{ group: Group }> = ({ group }) => {
                     {activeTab === "games" && (
                         <div className="space-y-3">
                             {games.map((game) => (
-                                <GameProfile key={game.id} game={game} />
+                                <GameProfile key={game.id} game={game} isTroll={isTroll} troll={troll} />
                             ))}
                         </div>
                     )}

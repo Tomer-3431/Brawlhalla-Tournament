@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { ref, onValue } from "firebase/database";
-import { Radio, Trophy } from "lucide-react";
+import { Radio } from "lucide-react";
 import type Game from "../types/Game";
 import { db } from "../Firebase";
-import type User from "../types/User";
+import { GameProfile } from "../types/Game";
 
 export default function Home() {
     const [liveGames, setLiveGames] = useState<Game[]>([]);
-    const [usersMap, setUsersMap] = useState<Record<string, User>>({});
+
+    const [troll, setTroll] = useState<string>('');
+    const [isTroll, setIsTroll] = useState<boolean>(false);
 
     useEffect(() => {
         const unsubGames = onValue(ref(db, "games"), (snapshot) => {
@@ -22,15 +24,28 @@ export default function Home() {
             }
         });
 
-        const unsubUsers = onValue(ref(db, "users"), (snapshot) => {
+        const trollRef = ref(db, "funshit/everyoneIsTamir");
+        const unsubTroll = onValue(trollRef, (snapshot) => {
             if (snapshot.exists()) {
-                setUsersMap(snapshot.val());
+                setTroll(snapshot.val());
+            } else {
+                setTroll('');
+            }
+        });
+
+        const isTrollRef = ref(db, "funshit/isEveryoneIsTamir");
+        const unsubIsTroll = onValue(isTrollRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setIsTroll(snapshot.val());
+            } else {
+                setIsTroll(false);
             }
         });
 
         return () => {
             unsubGames();
-            unsubUsers();
+            unsubIsTroll();
+            unsubTroll();
         };
     }, []);
 
@@ -67,61 +82,8 @@ export default function Home() {
                         {liveGames.map((game) => (
                             <div
                                 key={game.id}
-                                className="bg-zinc-900 border border-red-500/30 rounded-xl p-5 shadow-xl relative overflow-hidden"
                             >
-                                <div className="flex justify-between items-center mb-4">
-                                    <div>
-                                        <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest block">
-                                            {game.group || "Match"} • Round {game.round}
-                                        </span>
-                                        <h4 className="text-lg font-bold text-white">{game.name}</h4>
-                                    </div>
-                                    <span className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 bg-red-500/20 text-red-400 border border-red-500/40 rounded-full animate-pulse">
-                                        <Radio className="w-3.5 h-3.5" /> LIVE
-                                    </span>
-                                </div>
-
-                                <div className="space-y-2">
-                                    {(game.users || []).map((userId, idx) => {
-                                        const userObj = usersMap[userId];
-                                        const score = game.points?.[idx] ?? 0;
-                                        const isWinner = game.winner === idx;
-
-                                        return (
-                                            <div
-                                                key={`${userId}-${idx}`}
-                                                className={`flex items-center justify-between p-2.5 rounded-lg border ${
-                                                    isWinner
-                                                        ? "bg-amber-950/30 border-amber-500/50 text-amber-200"
-                                                        : "bg-zinc-950/70 border-zinc-800 text-zinc-200"
-                                                }`}
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    {userObj?.avatar ? (
-                                                        <img
-                                                            src={userObj.avatar}
-                                                            alt=""
-                                                            className="w-7 h-7 rounded-full object-cover"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-7 h-7 rounded-full bg-zinc-800 flex items-center justify-center text-xs">
-                                                            ?
-                                                        </div>
-                                                    )}
-                                                    <span className="text-sm font-semibold truncate">
-                                                        {userObj?.username || userId || "TBD"}
-                                                    </span>
-                                                    {isWinner && (
-                                                        <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                                                    )}
-                                                </div>
-                                                <span className="font-mono text-base font-bold text-amber-400 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">
-                                                    {score}
-                                                </span>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                                <GameProfile game={game} isTroll={isTroll} troll={troll} />
                             </div>
                         ))}
                     </div>
